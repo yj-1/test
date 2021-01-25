@@ -1,0 +1,4 @@
+@mixin wh($w: 100%, $h: 100%) {
+  width: $w;
+  height: $h;
+}
