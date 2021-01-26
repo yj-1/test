@@ -6,7 +6,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
+import { getProfiles } from "@/api/login"
+console.log(getProfiles())
 export default defineComponent({
   name: "Home",
 });

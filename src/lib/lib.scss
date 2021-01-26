@@ -1,0 +1,18 @@
+@mixin bd-color($c) {
+  background-color: $c;
+  border-color: $c;
+}
+.btn {
+  // padding: 20rem 0,
+  border-radius: 4px;
+  cursor: pointer;
+  color: #ffffff;
+  @include bd-color(#409eff);
+  &:hover {
+    @include bd-color(#66b1ff);
+  }
+  &:active {
+    // background-color: #3a8ee6;
+    @include bd-color(#3a8ee6);
+  }
+}
