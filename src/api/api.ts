@@ -1,8 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 import { ElMessage, ElLoading } from 'element-plus'
-import { useRoute } from 'vue-router'
-const route = useRoute()
-console.log(route)
+import router, { routerPush } from '@/router/index'
+
 const req: AxiosInstance = axios.create({
   baseURL: '/api',
   timeout: 10000,
@@ -14,8 +13,8 @@ req.interceptors.request.use(cfg => {
     text: "加载中···",
     fullscreen: true
   })
-  const token = sessionStorage.getItem('Authentization')
-  cfg.headers['Authentization'] = token
+  const token = sessionStorage.getItem('Authorization')
+  cfg.headers['Authorization'] = token
   // if (!sessionStorage.getItem('Authentization')) {
   //   location.href = '/login'
   // } else {
@@ -56,10 +55,14 @@ req.interceptors.response.use(cfg => {
   setTimeout(() => {
     Loading.close()
   }, 300)
-  console.log(err.request)
+  console.log(err.request,234)
   const { request: { status, statusText } } = err
   let msg = ""
+  let fn:Function|undefined = undefined;
   switch (status) {
+    case 401:
+      msg = "丢失token权限或token已过期！"
+      fn = () => router.push('/login');break;
     case 404:
     case 403:
     case 402:
@@ -70,8 +73,10 @@ req.interceptors.response.use(cfg => {
   ElMessage({
     showClose: true,
     message: msg,
-    type: "error"
+    type: "error",
+    duration: 1000
   })
+  fn && fn()
   return Promise.reject(err)
 })
 

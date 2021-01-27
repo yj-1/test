@@ -24,8 +24,9 @@ export const Login = async (data) => {
     .then((data:any) => {
     // sessionStorage.clear()
     console.log(data)
-    sessionStorage.setItem("Authentization", data.token)
+      sessionStorage.setItem("Authorization", data?.result?.token)
     console.log(data)
+    return Promise.resolve()
   })
   .catch(err => err)
 }

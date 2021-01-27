@@ -5,11 +5,7 @@
     </header>
     <main class="bottom">
       <aside class="left">
-        <ul>
-          <li>1</li>
-          <li>2</li>
-          <li>3</li>
-        </ul>
+        <AsideLeft/>
       </aside>
       <section class="right">
         <div class="view wh">
@@ -22,13 +18,16 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-
+import AsideLeft from "./Aside.vue"
 export default defineComponent({
   name: "Layout",
+  components: {
+    AsideLeft
+  }
 })
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 $h: 60rem;
 .top {
   height: $h;
@@ -37,8 +36,8 @@ $h: 60rem;
   height: calc(100% - #{$h});
   @extend .flex;
   .left {
-    @include wh(200rem);
-    background: #ff00ff;
+    @include wh(400rem);
+    background: rgb(84, 92, 100);
   }
   .right {
     @include wh(calc(100% - 200rem));

@@ -2,3 +2,29 @@
   width: $w;
   height: $h;
 }
+.wh {
+  width: 100%;
+  height: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.column {
+  @extend .flex, .flex-column;
+}
+.align-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
+
+.flex-center {
+  @extend .flex, .flex-column, .align-center;
+}

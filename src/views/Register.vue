@@ -147,7 +147,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .center {
   @extend .flex-center, .justify-center;
   background: #c3f5a3;

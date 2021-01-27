@@ -75,7 +75,9 @@ export default defineComponent({
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          Login(this.ruleForm)
+          Login(this.ruleForm).then(() => {
+            this.$router.replace('/')
+          })
           // alert("submit!");
         } else {
           console.log("error submit!!");
@@ -90,7 +92,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .center {
   @extend .flex-center, .justify-center;
   background: #c3f5a3;

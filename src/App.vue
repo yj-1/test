@@ -1,13 +1,20 @@
 <template>
-  <router-view />
+  <Layout v-if="$store.state.RouterView" />
+  <router-view v-else />
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { defineComponent } from "vue"
+import Layout from "@/router/components/layout"
+
+export default defineComponent({
+  name: "App",
+  components: {
+    Layout
+  }
+})
+</script>
+
+<style>
+
 </style>
