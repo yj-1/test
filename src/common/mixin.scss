@@ -2,6 +2,14 @@
   width: $w;
   height: $h;
 }
+@mixin max-w($w: 100%, $m-w: 100%) {
+  width: $w;
+  max-width: $m-w;
+}
+@mixin max-h($h: 100%, $m-h: 100%) {
+  height: $h;
+  max-height: $m-h;
+}
 .wh {
   width: 100%;
   height: 100%;
@@ -24,7 +32,16 @@
 .justify-center {
   justify-content: center;
 }
-
+.between {
+  @extend .flex, .align-center;
+  justify-content: space-between;
+}
+.center {
+  @extend .flex, .justify-center, .align-center;
+}
 .flex-center {
   @extend .flex, .flex-column, .align-center;
+}
+.flex-wrap {
+  flex-wrap: wrap;
 }

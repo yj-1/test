@@ -2,7 +2,7 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: `@import "@/common/mixin.scss";`,
+        prependData: `@import "@/common/mixin.scss";\n@import "@/common/theme.scss";`,
       },
     },
   },

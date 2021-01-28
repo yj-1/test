@@ -1,11 +1,13 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory, Router, RouteRecordRaw } from "vue-router";
 import store from "@/store/index";
+import Null from "./components/Null.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
     meta: {
+      icon: "el-icon-menu",
       title: "首页",
     },
     component: () => import("@/views/Home.vue")
@@ -32,13 +34,34 @@ const routes: Array<RouteRecordRaw> = [
     path: "/user",
     name: "user",
     meta: {
+      icon: "el-icon-menu",
       title: "用户管理",
     },
-    component: () => import("@/views/User.vue")
-  } // 用户管理
+    component: Null,
+  }, // 用户管理
+  {
+    path: "/fundmanage",
+    name: "fundmange",
+    meta: {
+      icon: "el-icon-menu",
+      title: "资金管理"
+    },
+    component: Null,
+    children: [
+      {
+        path: "turnover",
+        name: "turnover",
+        meta: {
+          title: "流水账单"
+        },
+        component: () => import("@/views/Turnover.vue")
+      }
+    ]
+    
+  }
 ];
 
-const router = createRouter({
+const router:Router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 });
@@ -46,7 +69,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if(to?.meta?.NoRouterMenu) {
     store.commit("setRouterView", false)
-  } 
+  }
   if(!/^\/(login|register)/.test(to.fullPath)) {
     if (!sessionStorage.getItem("Authorization")) {
       router.replace('/login')

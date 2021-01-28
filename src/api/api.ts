@@ -20,7 +20,6 @@ req.interceptors.request.use(cfg => {
   // } else {
 
   // }
-  console.log(cfg)
   return cfg
 })
 
@@ -34,14 +33,29 @@ req.interceptors.response.use(cfg => {
   if (status === 200) {
     console.log(data)
     if (data?.result) {
-      return Promise.resolve(data)
+      if(data.msg) {
+        ElMessage({
+          showClose: true,
+          message: data.msg,
+          type: "success"
+        })
+      }
+
+      return Promise.resolve(data.result)
+    } else if(data?.status === 200) {
+      ElMessage({
+        showClose: true,
+        message: data.msg || data.statusText,
+        type: "error"
+      })
+      return Promise.reject({ msg: "暂无数据！" })
     } else {
       ElMessage({
         showClose: true,
-        message: "暂时无数据！",
+        message: data.msg || data.statusText || "未知错误！",
         type: "error"
       })
-      return Promise.reject({ msg: '暂时无数据！' })
+      return Promise.reject({ msg: '未知！' })
     }
   } else {
     ElMessage({
@@ -55,7 +69,6 @@ req.interceptors.response.use(cfg => {
   setTimeout(() => {
     Loading.close()
   }, 300)
-  console.log(err.request,234)
   const { request: { status, statusText } } = err
   let msg = ""
   let fn:Function|undefined = undefined;

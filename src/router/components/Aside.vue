@@ -8,7 +8,7 @@
         :uniqueOpened="true"
         default-active="2"
         class="el-menu-vertical-demo content textLeft"
-        style="flex-grow: 1;"
+        style="flex-grow: 1;border-right: 0;"
         :router="true"
         :defaultActive="fullPath"
         @open="handleOpen"
@@ -17,21 +17,6 @@
         text-color="#fff"
         active-text-color="#ffd04b"
       >
-        <!-- <el-submenu index="1">
-          <template #title>
-            <i class="el-icon-location"></i>
-            <span>导航一</span>
-          </template>
-          <el-submenu index="1-4">
-            <template #title>选项4</template>
-            <el-menu-item index="1-4-1">选项1</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <el-menu-item index="2">
-          <i class="el-icon-menu"></i>
-          <template #title>导航二</template>
-        </el-menu-item>
-        <SubMenu :routes="routes"></SubMenu> -->
         <Route :routes="routes" />
       </el-menu>
     </el-col>
@@ -54,7 +39,7 @@ export default defineComponent({
     const { fullPath, matched } = useRoute()
     console.log(fullPath, matched)
     interface TsFilter {
-      (routes: RouteRecordRaw[]): RouteRecordRaw[] | undefined;
+      (routes: RouteRecordRaw[], path?:string): RouteRecordRaw[] | undefined;
     }
     const filterRouter: TsFilter = (routes) => {
       const arr: Array<any> = [];
@@ -67,6 +52,7 @@ export default defineComponent({
         // } else 
         if(route?.children?.length) {
           route.children = filterRouter(route.children)
+          console.log(route, "路由")
           arr.push(route);
         } else if (!route?.meta?.hideMenu) {
           arr.push(route);

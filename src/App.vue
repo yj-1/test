@@ -1,6 +1,6 @@
 <template>
-  <Layout v-if="$store.state.RouterView" />
-  <router-view v-else />
+  <Layout v-if="$store.state.RouterView" key="0" />
+  <router-view key="1" v-else />
 </template>
 
 <script>
