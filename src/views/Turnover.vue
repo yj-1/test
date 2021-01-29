@@ -4,7 +4,7 @@
       <el-button type="primary" size="small" @click="handleAdd">添加</el-button>
     </div>
 
-    <el-table :data="data.list" border style="width: 100%">
+    <el-table :data="data.list" max-height="800" border style="width: 100%">
       <!-- 序号 -->
       <el-table-column align="center" width="100" type="index" label="序号">
       </el-table-column>
@@ -18,7 +18,7 @@
         minWidth="120"
       >
         <template #default="scope">
-          <span style="color: #10AF20;">{{ "+ " + scope.row.cash }}</span>
+          <span style="color: #10AF20;">{{ '+ ' + scope.row.cash }}</span>
         </template>
       </el-table-column>
 
@@ -31,7 +31,7 @@
         minWidth="120"
       >
         <template #default="scope">
-          <span style="color: #f93210;">{{ "- " + scope.row.expend }}</span>
+          <span style="color: #f93210;">{{ '- ' + scope.row.expend }}</span>
         </template>
       </el-table-column>
 
@@ -49,11 +49,11 @@
       </el-table-column>
 
       <!-- 评论 -->
-      <el-table-column align="center" prop="remark" label="评论" minWidth="300">
+      <el-table-column align="center" prop="remark" label="评论" minWidth="200">
       </el-table-column>
 
       <!-- 备注 -->
-      <el-table-column align="center" prop="type" label="备注" minWidth="120">
+      <el-table-column align="center" prop="type" label="备注" minWidth="150">
       </el-table-column>
 
       <!-- 日期 -->
@@ -66,12 +66,14 @@
       >
         <template #default="scope">
           <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ formatDate(scope.row.date) }}</span>
+          <span style="margin-left: 10px">{{
+            formatDate(scope.row.date)
+          }}</span>
         </template>
       </el-table-column>
 
       <!-- 操作 -->
-      <el-table-column align="center" fixed="right" label="操作" minWidth="100">
+      <el-table-column align="center" fixed="right" label="操作" minWidth="150">
         <template #default="scope">
           <div class="handle">
             <el-button
@@ -83,7 +85,7 @@
             <el-button
               type="danger"
               size="small"
-              @click="handleDel(scope.row,scope.$index)"
+              @click="handleDel(scope.row, scope.$index)"
               >删除</el-button
             >
           </div>
@@ -106,7 +108,12 @@
     </div>
 
     <!-- 表单对话框 -->
-    <el-dialog title="添加" v-model="formShow" center>
+    <el-dialog
+      :title="data.id ? '修改' : '添加'"
+      @close="cancel"
+      v-model="formShow"
+      center
+    >
       <el-form :model="form" ref="test" :rules="rules">
         <el-form-item label="收入" label-width="100px" prop="cash">
           <el-input v-model="form.cash"></el-input>
@@ -139,74 +146,83 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref, onBeforeMount } from "vue";
-import { getProfiles, addProfile, delProfile } from "@/api/login";
-import dayjs from "dayjs";
+import { defineComponent, reactive, ref, onBeforeMount } from 'vue'
+import { getProfiles, addProfile, delProfile, editProfile } from '@/api/login'
+import dayjs from 'dayjs'
 export default defineComponent({
-  name: "FundManage",
+  name: 'FundManage',
   setup(props, ctx) {
     // 基础变量
     const page = reactive({
       current: 1,
       total: 300,
       size: 10,
-      sizes: [10, 20, 30, 40],
-    });
-    const data = reactive({list:[]});
-    const show = ref(false);
+      sizes: [10, 20, 30, 40]
+    }) // 分页
+    const AddToEdit = ref(false) // 添加修改转换
+    const data = reactive({ list: [], id: null, index: null }) // 表格数据
+    const show = ref(false) // 对话框显示
     const form = reactive({
-      type: "测试",
-      expend: "100",
-      remark: "...",
-      cash: "50",
-      income: "50"
-    });
-    const validate = { required: true, message: "该选项为必填值！" };
+      type: '测试',
+      expend: '100',
+      remark: '...',
+      cash: '50',
+      income: '50'
+    }) //表单
+    const validate = { required: true, message: '该选项为必填值！' } // 规则
     const rules = {
       cash: [validate],
       expend: [validate],
       remark: [validate],
       type: [validate],
-      income: [validate],
-    };
+      income: [validate]
+    } // 效验规则
     // 方法
     const fns = {
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
+        console.log(`每页 ${val} 条`)
+      }, // 分页改变
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      },
+        console.log(`当前页: ${val}`)
+      }, // 当前页改变
       formatDate(v) {
-        return dayjs(v).format("YYYY-MM-DD HH:mm:ss");
+        return dayjs(v).format('YYYY-MM-DD HH:mm:ss')
       }, // 格式化日期
       handleEdit(d, i) {
-        console.log(d, i);
+        form.type = d.type
+        form.expend = d.expend
+        form.remark = d.remark
+        form.cash = d.cash
+        form.income = d.income
+        show.value = true
+        data.id = d._id
+        data.index = i
+        console.log(d, i)
       }, // 编辑
       handleAdd() {
         show.value = true
-      },
+      }, // 添加按钮
       handleDel(val, i) {
         delProfile(val._id).then(result => {
-          data.list.splice(i,1)
-          console.log(data, "表格")
+          data.list.splice(i, 1)
+          console.log(data, '表格')
           console.log(result)
         })
-        show.value=false
-        console.log(val,i);
-      }, // 删除
-    };
-  const setData = val => {
-    data.list = val
-  }
+        show.value = false
+        console.log(val, i)
+      } // 删除
+    }
+    const setData = val => {
+      data.list = val
+    } // 设置表格数据
+
     onBeforeMount(() => {
-      getProfiles().then((result) => {
-        // console.log(data["[[Target]]"].value)
+      getProfiles().then(result => {
         setData(result)
         // data.value.push(...result);
-        console.log(data, 234);
-      });
-    });
+        console.log(data, 234)
+      })
+    })
 
     return {
       data,
@@ -215,31 +231,52 @@ export default defineComponent({
       ...fns,
       form,
       rules,
-    };
+      AddToEdit
+    }
   },
   methods: {
     cancel() {
-      this.$refs["test"].resetFields();
-      this.formShow = false;
-    },
-    define() {
-      this.$refs["test"].validate((valid) => {
-        console.log(valid);
+      this.$refs['test'].resetFields()
+      this.data.index = this.data.id = null
+      this.formShow = false
+    }, // 关闭对话框
+    addProfile() {
+      this.$refs['test'].validate(valid => {
+        console.log(valid)
         if (valid) {
-          console.log(23423);
           addProfile(this.form).then(data => {
             this.data.list.push(data)
-            console.log(this.data,data, "c")
+            console.log(this.data, data, 'c')
             this.formShow = false
           })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
-    },
-  },
-});
+      })
+    }, // 添加Profile
+    editProfile() {
+      if (this.data.id && this.form) {
+        editProfile(this.data.id, this.form).then(data => {
+          console.log(data)
+          if (data) {
+            Object.assign(this.data.list[this.data.index], this.form)
+            this.data.id = this.data.index = null
+            this.formShow = false
+          }
+        })
+      }
+    }, // 编辑Profile
+    define() {
+      console.log(2343)
+      if (!this.AddToEdit) {
+        this.addProfile()
+      } else {
+        this.editProfile()
+      }
+    } // 确认按钮
+  }
+})
 </script>
 
 <style lang="scss" scoped>

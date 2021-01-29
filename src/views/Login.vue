@@ -38,58 +38,63 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref } from "vue";
-import { Login } from "@/api/login"
+import { defineComponent, reactive, ref } from 'vue'
+import { Login } from '@/api/login'
 export default defineComponent({
-  name: "register",
+  name: 'Login',
   data() {
     const validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
+      if (value === '') {
+        callback(new Error('请输入密码'))
       } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
+        if (this.ruleForm.checkPass !== '') {
+          this.$refs.ruleForm.validateField('checkPass')
         }
-        callback();
+        callback()
       }
-    };
+    }
     const validateName = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("用户名不能为空！"));
+        callback(new Error('用户名不能为空！'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       ruleForm: {
-        username: "user0",
-        password: "123456",
+        username: 'user0',
+        password: '123456'
       },
       rules: {
-        username: [{ validator: validateName, trigger: "blur" }],
-        password: [{ validator: validatePass, trigger: "blur" }],
-      },
-    };
+        username: [{ validator: validateName, trigger: 'blur' }],
+        password: [{ validator: validatePass, trigger: 'blur' }]
+      }
+    }
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          Login(this.ruleForm).then(() => {
+          Login(this.ruleForm).then(data => {
+            this.$store.commit('setState', {
+              type: 'rules',
+              value: data.identity
+            })
+            this.$store.commit('setState', { type: 'name', value: data.name })
+            console.log(this.$store)
             this.$router.replace('/')
           })
-          // alert("submit!");
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-  },
-});
+      this.$refs[formName].resetFields()
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>

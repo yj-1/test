@@ -12,7 +12,7 @@
         />
         <div class="column user-text">
           <span>欢迎</span>
-          <span>用户1</span>
+          <span>{{$store.state.user.name}}</span>
         </div>
         <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">

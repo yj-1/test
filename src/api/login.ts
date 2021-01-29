@@ -25,7 +25,7 @@ export const Login = async (data) => {
     sessionStorage.clear()
     console.log(data, "测试")
     sessionStorage.setItem("Authorization", data.token)
-    return Promise.resolve()
+    return Promise.resolve(data)
   })
   .catch(err => err)
 }
@@ -45,9 +45,24 @@ export const addProfile = async (data) => {
   })
 }
 
-export const delProfile = async (id) => {
+export const delProfile = async (id:string) => {
   return req({
     method: "POST",
     url: `/profiles/delete/${id}`
+  })
+}
+type tsProfile = {
+  type: string,
+  expend: string,
+  income: string,
+  cash: string,
+  remark: string,
+  describe?: string
+}
+export const editProfile = async (id:string, data:tsProfile) => {
+  return req({
+    method: "POST",
+    url: `/profiles/edit/${id}`,
+    data
   })
 }

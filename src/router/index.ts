@@ -37,7 +37,7 @@ const routes: Array<RouteRecordRaw> = [
       icon: "el-icon-menu",
       title: "用户管理",
     },
-    component: Null,
+    component: () => import("@/views/User.vue"),
   }, // 用户管理
   {
     path: "/fundmanage",

@@ -57,94 +57,91 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, reactive, ref } from 'vue'
 import { Register } from '@/api/login'
 export default defineComponent({
-  name: "register",
-  // components: {
-  //   // Item,
-  //   // Button,
-  // },
-  setup() { return {}},
+  name: 'register',
   data() {
     const checkIdentity = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("身份不能为空"));
+        return callback(new Error('身份不能为空'))
       }
       if (!Number.isInteger(value)) {
-        callback(new Error("请输入数字值"));
+        callback(new Error('请输入数字值'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
+      if (value === '') {
+        callback(new Error('请输入密码'))
       } else {
-        if (this.ruleForm.password !== "") {
-          this.$refs.ruleForm.validateField("password");
+        if (this.ruleForm.password !== '') {
+          this.$refs.ruleForm.validateField('password')
         }
-        callback();
+        callback()
       }
-    };
+    }
     const validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm.checkPass) {
-        callback(new Error("两次输入密码不一致!"));
+        callback(new Error('两次输入密码不一致!'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validateName = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("用户名不能为空！"));
+        callback(new Error('用户名不能为空！'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       ruleForm: {
-        username: "user0",
-        password: "123456",
-        checkPass: "123456",
-        identity: "",
+        username: 'user0',
+        password: '123456',
+        checkPass: '123456',
+        identity: ''
       },
       rules: {
-        username: [{ validator: validateName, trigger: "blur" }],
-        password: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        identity: [{ validator: checkIdentity, trigger: "blur" }],
+        username: [{ validator: validateName, trigger: 'blur' }],
+        password: [{ validator: validatePass, trigger: 'blur' }],
+        checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+        identity: [{ validator: checkIdentity, trigger: 'blur' }]
       },
-      options: [  // 用户选择
+      options: [
+        // 用户选择
         {
           value: 1,
-          label: "管理员",
+          label: '管理员'
         },
         {
           value: 2,
-          label: "用户",
-        },
-      ],
-    };
+          label: '用户'
+        }
+      ]
+    }
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          Register(this.ruleForm)
-          // alert("submit!");
+          Register(this.ruleForm).then(data => {
+            this.$router.replace('/login')
+          })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-  },
-});
+      this.$refs[formName].resetFields()
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>

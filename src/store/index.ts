@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-
+import { user } from './modules/user'
 const store = createStore({
   state: {
     RouterView: false,
@@ -10,7 +10,9 @@ const store = createStore({
     } // 修改路由视图
   },
   actions: {},
-  modules: {}
+  modules: {
+    user
+  }
 });
 
 export default store

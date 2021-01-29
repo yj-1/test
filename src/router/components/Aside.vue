@@ -6,11 +6,10 @@
       </div>
       <el-menu
         :uniqueOpened="true"
-        default-active="2"
         class="el-menu-vertical-demo content textLeft"
         style="flex-grow: 1;border-right: 0;"
         :router="true"
-        :defaultActive="fullPath"
+        :defaultActive="path"
         @open="handleOpen"
         @close="handleClose"
         background-color="#545c64"
@@ -24,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref, watchEffect, onBeforeUnmount } from "vue";
 import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import Route from "./route";
 export default defineComponent({
@@ -36,23 +35,20 @@ export default defineComponent({
     const {
       options: { routes },
     } = useRouter();
-    const { fullPath, matched } = useRoute()
-    console.log(fullPath, matched)
+    const route = useRoute()
+    const path = ref(route.fullPath)
     interface TsFilter {
       (routes: RouteRecordRaw[], path?:string): RouteRecordRaw[] | undefined;
     }
+
+    const stop = watchEffect(() =>{ path.value=route.fullPath})
+    onBeforeUnmount(stop)
+
     const filterRouter: TsFilter = (routes) => {
       const arr: Array<any> = [];
       routes.map((route) => {
-        // if (route?.children?.length && route?.meta?.hideMenu) {
-        //   const newArr = filterRouter(route.children)
-        //   if(Array.isArray(newArr)) {
-        //     arr.push(...newArr);
-        //   }
-        // } else 
         if(route?.children?.length) {
           route.children = filterRouter(route.children)
-          console.log(route, "路由")
           arr.push(route);
         } else if (!route?.meta?.hideMenu) {
           arr.push(route);
@@ -62,9 +58,9 @@ export default defineComponent({
         return arr;
       }
     }; // 过滤数组
-    console.log(routes)
+    console.log(path)
     return {
-      fullPath,
+      path,
       routes: filterRouter(routes),
     };
   },

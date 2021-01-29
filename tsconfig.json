@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext", // 包
+    "strict": true, // 严格模式
+    "jsx": "preserve", // jsx预设
+    "importHelpers": true, // 导包提示
+    "moduleResolution": "node", // 解析规则
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "noImplicitAny": false,
-    "baseUrl": ".",
+    "esModuleInterop": true, // 使用es6模块化
+    "allowSyntheticDefaultImports": true, // 是否使用commonjs为备用模块
+    "sourceMap": true, // 是否映射源码
+    "noImplicitAny": false, // 不使用any
+    "baseUrl": ".", // 基础路径
     "types": [
       "webpack-env"
     ],
